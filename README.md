@@ -17,6 +17,7 @@ A robust, full-featured Python toolkit and AI Agent Skill for the **NASA Astroph
 - 📚 **Library Synchronization (Libraries API)**: Create, read, update, delete, and share ADS collaborative libraries.
 - 📖 **Journals Database (JournalsDB API)**: Look up journal metadata, publication history, ISSNs, and volume holdings.
 - 🤖 **Co-Citation Recommendations (Citation Helper)**: Discover relevant missing papers using the "Friends of Friends" co-citation network.
+- 📥 **Fulltext PDF Downloader**: Download open-access papers strictly via ADS Scanned Library and Publisher OA links with anti-bot/paywall detection.
 - 🛡️ **Production-Ready Resilience**: Automatic Bearer token auth, rate-limit header tracking, exponential backoff retries, and comprehensive error handling.
 - ⚡ **AI Agent Ready (Skill)**: Built-in `SKILL.md` compliant with Antigravity / Agent Skill specifications.
 
@@ -168,6 +169,16 @@ ads-tool library list
 
 # 创建文献库
 ads-tool library create --name "Exoplanet Atmospheres" --desc "Key papers"
+```
+
+### 7. 文献全文/PDF 下载 (`download`)
+严格通过 **途径 1（ADS 官方扫描库）** 与 **途径 3（出版商开放获取直链）** 下载全文 PDF（已排除 arXiv，并内置反爬拦截与付费墙有效性验证）：
+```bash
+# 下载指定论文 PDF 至 ./downloads 目录
+ads-tool download "1965ApJ...142..419P" --output-dir ./downloads
+
+# 下载并输出详细失败原因（若受付费墙或反爬拦截）
+ads-tool download "2014JGRA..119...36O" --verbose
 ```
 
 ---

@@ -196,10 +196,43 @@ def cmd_resolve(ads: ADS, args):
     print(json.dumps(res, ensure_ascii=False, indent=2))
     save_output(res, args.output)
 
+def cmd_download(ads: ADS, args):
+    bibcodes = parse_bibcodes_arg(args.bibcodes, args.file)
+    if not bibcodes and getattr(args, "bibcode", None):
+        bibcodes = [args.bibcode]
+    if not bibcodes:
+        print("Error: No bibcode provided. Use positional bibcode, --bibcodes, or --file.", file=sys.stderr)
+        sys.exit(1)
+
+    results = []
+    for bib in bibcodes:
+        res = ads.downloader.download(bib, output_dir=args.output_dir, filename=args.filename)
+        results.append(res)
+        if res["status"] == "success":
+            print(f"[{bib}] [OK] {res['message']} -> {res['filepath']} ({res['size_kb']})")
+        else:
+            print(f"[{bib}] [FAILED] {res['message']}", file=sys.stderr)
+            if getattr(args, "verbose", False) and "details" in res:
+                for d in res["details"]:
+                    print(f"    - {d}", file=sys.stderr)
+
+    if args.output:
+        save_output(results if len(results) > 1 else results[0], args.output)
+
 def main():
     parser = argparse.ArgumentParser(description="NASA ADS CLI Tool for AI Agents and Researchers")
     parser.add_argument("--token", help="Override ADS API Token")
     subparsers = parser.add_subparsers(dest="command", required=True)
+
+    # Download
+    p_dl = subparsers.add_parser("download", help="Download paper PDF strictly via ADS Scanned Library or Publisher OA")
+    p_dl.add_argument("bibcode", nargs="?", help="Bibcode to download")
+    p_dl.add_argument("--bibcodes", help="Comma-separated bibcodes to download")
+    p_dl.add_argument("--file", help="File containing bibcodes to download")
+    p_dl.add_argument("--output-dir", default="./downloads", help="Directory to save downloaded PDFs (default: ./downloads)")
+    p_dl.add_argument("--filename", help="Optional custom filename (for single bibcode)")
+    p_dl.add_argument("--output", help="Save download report to JSON file")
+    p_dl.add_argument("--verbose", action="store_true", help="Print detailed failure reasons")
 
     # Search
     p_search = subparsers.add_parser("search", help="Execute Solr search queries against ADS")
@@ -331,6 +364,8 @@ def main():
             cmd_recommend(ads, args)
         elif args.command == "resolve":
             cmd_resolve(ads, args)
+        elif args.command == "download":
+            cmd_download(ads, args)
     except ADSError as e:
         print(f"ADS Error ({e.status_code}): {e}", file=sys.stderr)
         sys.exit(1)

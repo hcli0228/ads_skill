@@ -149,6 +149,22 @@ python scripts/ads_tool.py resolve "1975CMaPh..43..199H"
 
 ---
 
+### 9. Paper Fulltext & PDF Download (`download`)
+Download fulltext PDFs strictly from:
+1. **NASA ADS Scanned Library (`ADS_PDF`)**: Free scanned astronomy and physics archive.
+2. **Publisher Open Access (`PUB_PDF`)**: Official publisher open access articles.
+*(Excludes arXiv preprints; includes anti-bot challenge and paywall interception validation)*.
+
+```bash
+# Download paper PDF to ./downloads
+python scripts/ads_tool.py download "1965ApJ...142..419P" --output-dir ./downloads
+
+# Download with verbose failure details if unavailable
+python scripts/ads_tool.py download "2014JGRA..119...36O" --verbose
+```
+
+---
+
 ## Python API Usage in Custom Code
 
 Agents and scripts can also directly import and use the `ads_api` package:

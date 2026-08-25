@@ -31,6 +31,8 @@ GEMINI.md
 # Temporary outputs & logs
 *.log
 *.tmp
+downloads/
+*.pdf
 owens2014_*.json
 owens2014_*.bib
 

@@ -10,6 +10,7 @@ from ads_api.libraries import LibraryService
 from ads_api.journals import JournalService
 from ads_api.resolver import ResolverService
 from ads_api.citation_helper import CitationHelperService
+from ads_api.downloader import DownloaderService
 
 class ADS:
     """
@@ -24,6 +25,11 @@ class ADS:
         self.journals = JournalService(self.client)
         self.resolver = ResolverService(self.client)
         self.citation_helper = CitationHelperService(self.client)
+        self.downloader = DownloaderService(self.client)
+
+    def download(self, bibcode: str, output_dir: str = "./downloads", filename: str = None):
+        """Helper shortcut to download a paper PDF."""
+        return self.downloader.download(bibcode, output_dir=output_dir, filename=filename)
 
     @property
     def rate_limit(self):
@@ -39,7 +45,9 @@ __all__ = [
     "JournalService",
     "ResolverService",
     "CitationHelperService",
+    "DownloaderService",
     "ADSError",
     "ADSRateLimitError",
     "ADSAuthError",
 ]
+
