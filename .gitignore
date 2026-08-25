@@ -1,0 +1,36 @@
+# Environment and Secrets
+.env
+*.env
+.env.local
+
+# Python Caches & Builds
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+dist/
+build/
+*.egg-info/
+.eggs/
+
+# Testing & Coverage
+.pytest_cache/
+pytest-cache-files-*/
+.coverage
+htmlcov/
+
+# Local IDE & Agents
+.vscode/
+.idea/
+.agents/
+.gemini/
+AGENTS.md
+GEMINI.md
+.DS_Store
+
+# Temporary outputs & logs
+*.log
+*.tmp
+owens2014_*.json
+owens2014_*.bib
+
